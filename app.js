@@ -5,20 +5,11 @@ var bodyParser = require('body-parser');
 
 var app = express();
 
+var user_routes = require('./routes/user');
+
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-app.get('/', (req, res) => {
-    res.status(200).send({
-        message: 'Welcome!'
-    });
-});
-
-app.post('/test', (req, res) => {
-    console.log(req.body);
-    res.status(200).send({
-        message: 'Testing...'
-    });
-});
+app.use('/api', user_routes);
 
 module.exports = app;
