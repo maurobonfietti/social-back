@@ -14,7 +14,8 @@ app.get('/', (req, res) => {
     });
 });
 
-app.get('/test', (req, res) => {
+app.post('/test', (req, res) => {
+    console.log(req.body);
     res.status(200).send({
         message: 'Testing...'
     });
