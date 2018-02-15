@@ -26,22 +26,30 @@ function saveUser (req, res) {
         user.email = params.email;
         user.role = 'ROLE_USER';
         user.image = null;
-        bcrypt.hash(params.password, null, null, (err, hash) => {
-            if (err) return res.status(500).send({message: "Saving user error."});
-            user.password = hash;
-        });
-        user.save((err, userStored) => {
-            if (err) return res.status(500).send({message: "Saving user error."});
-            if (userStored) {
-                res.status(200).send({user: userStored});
+        User.find({ $or: [
+            {email: user.email.toLowerCase()},
+            {nick: user.nick.toLowerCase()}
+        ]}).exec((err, users) => {
+            if (err) return res.status(500).send({message: "Creating user error."}); 
+            if (users && users.length >= 1) {
+                return res.status(200).send({message: "User already exists."});
             } else {
-                res.status(404).send({message: "User Not Found."});
+                bcrypt.hash(params.password, null, null, (err, hash) => {
+                    if (err) return res.status(500).send({message: "Saving user error."});
+                    user.password = hash;
+                });
+                user.save((err, userStored) => {
+                    if (err) return res.status(500).send({message: "Saving user error."});
+                    if (userStored) {
+                        return res.status(200).send({user: userStored});
+                    } else {
+                        return res.status(404).send({message: "User Not Found."});
+                    }
+                });
             }
         });
     } else {
-        res.status(200).send({
-            message: 'Invalid Data.'
-        });
+        return res.status(200).send({message: 'Invalid Data.'});
     }
 };
 
