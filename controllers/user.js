@@ -85,10 +85,8 @@ function getUser(req, res) {
     var userId = req.params.id;
 
     User.findById(userId, (err, user) => {
-        if (err) {
-            return res.status(500).send({message: "Request Error."});
-        }
         if (!user) return res.status(404).send({message: "User Not Found."});
+        if (err) return res.status(500).send({message: "Request Error."});
 
         return res.status(200).send({user});
     });
