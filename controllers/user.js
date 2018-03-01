@@ -94,7 +94,7 @@ function getUser(req, res) {
 }
 
 function getUsers(req, res) {
-    var identity_user_id = req.user.sub;
+//    var identity_user_id = req.user.sub;
     var page = 1;
 
     if (req.params.page) {
@@ -114,11 +114,30 @@ function getUsers(req, res) {
     });
 }
 
+function updateUser(req, res) {
+    var userId = req.params.id;
+    var update = req.body;
+
+    delete update.password;
+
+    if (userId !== req.user.sub) {
+        return res.status(500).send({message: "You do not have permissions to modify the user."});
+    }
+
+    User.findByIdAndUpdate(userId, update, {new: true}, (err, userUpdated) => {
+        if (!userUpdated) return res.status(404).send({message: "User Not Found."});
+        if (err) return res.status(500).send({message: "Request Error."});
+
+        return res.status(200).send({user: userUpdated});
+    });
+}
+
 module.exports = {
     home,
     test,
     saveUser,
     loginUser,
     getUser,
-    getUsers
+    getUsers,
+    updateUser
 };
