@@ -4,6 +4,8 @@ var bcrypt = require('bcrypt-nodejs');
 var mongoosePaginate = require('mongoose-pagination');
 var User = require('../models/user');
 var jwt = require('../services/jwt');
+var fs = require('fs');
+var path = require('path');
 
 function home (req, res) {
     res.status(200).send({
@@ -132,6 +134,42 @@ function updateUser(req, res) {
     });
 }
 
+function uploadImage(req, res) {
+    var userId = req.params.id;
+
+    if (req.files) {
+        console.log(req.files);
+        var file_path = req.files.image.path;
+        console.log(file_path);
+//        console.log(req.files.dsa);
+        var file_split = file_path.split('/');
+        console.log(file_split);
+        var file_name = file_split[2];
+        console.log(file_name);
+        var ext_split = file_name.split('\.');
+        var file_ext = ext_split[1];
+        console.log(file_ext);
+
+        if (userId !== req.user.sub) {
+            removeFilesOfUploads(res, file_path, "You do not have permissions to modify the user.");
+        }
+
+        if (file_ext == 'png' || file_ext == 'jpg' || file_ext == 'jpeg' || file_ext == 'gif') {
+            
+        } else {
+            removeFilesOfUploads(res, file_path, "Ups, please upload a valid image file.");
+        }
+    } else {
+        return res.status(200).send({message: "Ups, please upload any file."});
+    }
+}
+
+function removeFilesOfUploads(res, file_path, message) {
+    fs.unlink(file_path, (err) => {
+        return res.status(200).send({message: message});
+    });
+}
+
 module.exports = {
     home,
     test,
@@ -139,5 +177,6 @@ module.exports = {
     loginUser,
     getUser,
     getUsers,
-    updateUser
+    updateUser,
+    uploadImage
 };
