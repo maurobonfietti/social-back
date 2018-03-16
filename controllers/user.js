@@ -138,26 +138,25 @@ function uploadImage(req, res) {
     var userId = req.params.id;
 
     if (req.files) {
-        console.log(req.files);
         var file_path = req.files.image.path;
-        console.log(file_path);
-//        console.log(req.files.dsa);
         var file_split = file_path.split('/');
-        console.log(file_split);
         var file_name = file_split[2];
-        console.log(file_name);
         var ext_split = file_name.split('\.');
         var file_ext = ext_split[1];
-        console.log(file_ext);
 
         if (userId !== req.user.sub) {
-            removeFilesOfUploads(res, file_path, "You do not have permissions to modify the user.");
+            return removeFilesOfUploads(res, file_path, "You do not have permissions to modify the user.");
         }
 
-        if (file_ext == 'png' || file_ext == 'jpg' || file_ext == 'jpeg' || file_ext == 'gif') {
-            
+        if (file_ext === 'png' || file_ext === 'jpg' || file_ext === 'jpeg' || file_ext === 'gif') {
+            User.findByIdAndUpdate(userId, {image: file_name}, {new: true}, (err, userUpdated) => {
+                if (!userUpdated) return res.status(404).send({message: "User Not Found."});
+                if (err) return res.status(500).send({message: "Request Error."});
+
+                return res.status(200).send({user: userUpdated});
+            });
         } else {
-            removeFilesOfUploads(res, file_path, "Ups, please upload a valid image file.");
+            return removeFilesOfUploads(res, file_path, "Ups, please upload a valid image file.");
         }
     } else {
         return res.status(200).send({message: "Ups, please upload any file."});
