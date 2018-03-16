@@ -169,6 +169,21 @@ function removeFilesOfUploads(res, file_path, message) {
     });
 }
 
+function getImageFile(req, res) {
+    var image_file = req.params.imageFile;
+//    console.log(image_file);
+    var path_file = './uploads/users/' + image_file;
+//    console.log(path_file);
+
+    fs.exists(path_file, (exists) => {
+        if (exists) {
+            res.sendFile(path.resolve(path_file));
+        } else {
+            return res.status(200).send({message: "Ups, the file not exists."});
+        }
+    });
+}
+
 module.exports = {
     home,
     test,
@@ -177,5 +192,6 @@ module.exports = {
     getUser,
     getUsers,
     updateUser,
-    uploadImage
+    uploadImage,
+    getImageFile
 };
