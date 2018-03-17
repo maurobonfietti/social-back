@@ -7,6 +7,6 @@ var md_auth = require('../middlewares/authenticated');
 //var multipart = require('connect-multiparty');
 //var md_upload = multipart({uploadDir: './uploads/users'});
 
-api.get('/follow-test', md_auth.ensureAuth, FollowController.test);
+api.post('/follow', md_auth.ensureAuth, FollowController.saveFollow);
 
 module.exports = api;
