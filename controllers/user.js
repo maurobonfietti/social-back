@@ -92,12 +92,33 @@ function getUser(req, res) {
         if (!user) return res.status(404).send({message: "User Not Found."});
         if (err) return res.status(500).send({message: "Request Error."});
 
-        Follow.findOne({"user": req.user.sub, "followed": userId}).exec((err, follow) => {
-            if (err) return res.status(500).send({message: "Error searching follows."});
-
-            return res.status(200).send({user, follow});
+        followThisUser(req.user.sub, userId).then((value) => {
+//            console.log(userId);
+            return res.status(200).send({user, value});
         });
     });
+}
+
+async function followThisUser(identity_user_id, user_id) {
+    var following = await Follow.findOne({"user": identity_user_id, "followed": user_id}).exec((err, follow) => {
+        if (err) return handleError(err);
+//        console.log(follow);
+        return follow;
+    });
+
+    var followed = await Follow.findOne({"user": user_id, "followed": identity_user_id}).exec((err, follow) => {
+        if (err) return handleError(err);
+//        console.log(follow);
+        return follow;
+    });
+
+//    console.log(following);
+//    console.log(followed);
+
+    return {
+        following: following,
+        followed: followed
+    };
 }
 
 function getUsers(req, res) {
