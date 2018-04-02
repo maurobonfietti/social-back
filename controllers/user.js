@@ -93,40 +93,35 @@ function getUser(req, res) {
         if (err) return res.status(500).send({message: "Request Error."});
 
         followThisUser(req.user.sub, userId).then((value) => {
-//            console.log(userId);
             return res.status(200).send({
                 user,
                 following: value.following,
-                followed: value.followed,
-                asd: value.asd
+                followed: value.followed
             });
         });
     });
 }
 
 async function followThisUser(identity_user_id, user_id) {
-    try {
-        var following = await Follow.findOne({ user: identity_user_id, followed: user_id }).exec()
-            .then((following) => {
-                return following;
-            })
-            .catch((err) => {
-                return handleError(err);
-            });
-        var followed = await Follow.findOne({ user: user_id, followed: identity_user_id }).exec()
-            .then((followed) => {
-                return followed;
-            })
-            .catch((err) => {
-                return handleError(err);
-            });
-        return {
-            following: following,
-            followed: followed
-        };
-    } catch (e) {
-        console.log(e);
-    }
+    var following = await Follow.findOne({ user: identity_user_id, followed: user_id }).exec()
+        .then((following) => {
+            return following;
+        })
+        .catch((err) => {
+            return handleError(err);
+        });
+    var followed = await Follow.findOne({ user: user_id, followed: identity_user_id }).exec()
+        .then((followed) => {
+            return followed;
+        })
+        .catch((err) => {
+            return handleError(err);
+        });
+
+    return {
+        following: following,
+        followed: followed
+    };
 }
 
 function getUsers(req, res) {
