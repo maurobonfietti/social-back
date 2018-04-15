@@ -64,12 +64,22 @@ function getPublications(req, res) {
 
 function getPublication(req, res) {
     var publicationId = req.params.id;
-    
+
     Publication.findById(publicationId, (err, publication) => {
         if (err) return res.status(500).send({message: "Get publication error..."});
         if (!publication) return res.status(404).send({message: "Publication not found."});
-        
+
         return res.status(200).send({publication});
+    });
+}
+
+function deletePublication(req, res) {
+    var publicationId = req.params.id;
+
+    Publication.find({'user': req.user.sub, '_id': publicationId}).remove((err) => {
+        if (err) return res.status(500).send({message: "Delete publication error..."});
+
+        return res.status(200).send({message: 'Publication deleted.'});
     });
 }
 
@@ -77,5 +87,6 @@ module.exports = {
     test,
     savePublication,
     getPublications,
-    getPublication
+    getPublication,
+    deletePublication
 };
