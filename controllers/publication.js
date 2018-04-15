@@ -83,10 +83,63 @@ function deletePublication(req, res) {
     });
 }
 
+function uploadImage(req, res) {
+    var publicationId = req.params.id;
+
+    if (req.files) {
+        var file_path = req.files.image.path;
+        var file_split = file_path.split('/');
+        var file_name = file_split[2];
+        var ext_split = file_name.split('\.');
+        var file_ext = ext_split[1];
+
+        if (file_ext === 'png' || file_ext === 'jpg' || file_ext === 'jpeg' || file_ext === 'gif') {
+            Publication.findOne({'user': req.user.sub, '_id': publicationId}).exec((err, publication) => {
+                console.log(publication);
+                if (publication) {
+                    Publication.findByIdAndUpdate(publicationId, {file: file_name}, {new: true}, (err, publicationUpdated) => {
+                        if (!publicationUpdated) return res.status(404).send({message: "Publication Not Found."});
+                        if (err) return res.status(500).send({message: "Request Error."});
+
+                        return res.status(200).send({publication: publicationUpdated});
+                    });
+                } else {
+                    return removeFilesOfUploads(res, file_path, "You do not have permissions to modify this publication.");
+                }
+            });
+        } else {
+            return removeFilesOfUploads(res, file_path, "Ups, please upload a valid image file.");
+        }
+    } else {
+        return res.status(200).send({message: "Ups, please upload any file."});
+    }
+}
+
+function removeFilesOfUploads(res, file_path, message) {
+    fs.unlink(file_path, (err) => {
+        return res.status(200).send({message: message});
+    });
+}
+
+function getImageFile(req, res) {
+    var image_file = req.params.imageFile;
+    var path_file = './uploads/publications/' + image_file;
+
+    fs.exists(path_file, (exists) => {
+        if (exists) {
+            res.sendFile(path.resolve(path_file));
+        } else {
+            return res.status(200).send({message: "Ups, the file not exists."});
+        }
+    });
+}
+
 module.exports = {
     test,
     savePublication,
     getPublications,
     getPublication,
-    deletePublication
+    deletePublication,
+    uploadImage,
+    getImageFile
 };
