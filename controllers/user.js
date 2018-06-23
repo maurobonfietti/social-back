@@ -240,11 +240,24 @@ function updateUser(req, res) {
         return res.status(500).send({message: "You do not have permissions to modify the user."});
     }
 
-    User.findByIdAndUpdate(userId, update, {new: true}, (err, userUpdated) => {
-        if (!userUpdated) return res.status(404).send({message: "User Not Found."});
-        if (err) return res.status(500).send({message: "Request Error."});
+    User.find({ $or: [
+        {email: update.email.toLowerCase()},
+        {nick: update.nick.toLowerCase()}
+    ]}).exec((err, users) => {
+        console.log(users);
+        var user_isset = false;
+        users.forEach((users) => {
+            if (users._id != userId) user_isset = true;
+        });
 
-        return res.status(200).send({user: userUpdated});
+        if (user_isset) return res.status(400).send({message: "The email and/or the nick already exists..."});
+
+        User.findByIdAndUpdate(userId, update, {new: true}, (err, userUpdated) => {
+            if (!userUpdated) return res.status(404).send({message: "User Not Found."});
+            if (err) return res.status(500).send({message: "Request Error."});
+
+            return res.status(200).send({user: userUpdated});
+        });
     });
 }
 
