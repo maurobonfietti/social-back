@@ -56,6 +56,7 @@ function getPublications(req, res) {
                 total_items: total,
                 pages: Math.ceil(total/itemsPerPage),
                 page: page,
+                item_per_page: itemsPerPage,
                 publications
             });
         });
