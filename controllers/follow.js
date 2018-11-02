@@ -46,6 +46,9 @@ function getFollowingUsers(req, res) {
     }
 
     var itemsPerPage = 4;
+//    console.log(itemsPerPage);
+//    console.log(userId);
+//    console.log(page);
 
     Follow.find({user: userId}).populate({path: 'followed'}).paginate(page, itemsPerPage, (err, follows, total) => {
         if (err) return res.status(500).send({message: "Get follow error."});
@@ -56,16 +59,18 @@ function getFollowingUsers(req, res) {
 //            pages: Math.ceil(total/itemsPerPage),
 //            follows: follows
 //        });
+//        console.log(follows);
         
-        followUserIds(req.user.sub).then((value) => {
+        followUserIds(userId).then((value) => {
+//            console.log(value);
             return res.status(200).send({
-//                x1: "x1t1",
+                x1: "x1t1",
                 total: total,
                 pages: Math.ceil(total/itemsPerPage),
 //                follows: follows,
                 follows,
                 user_following: value.following,
-                user_follow_me: value.followed,
+                user_follow_me: value.followed
             });
         });
     });
@@ -96,7 +101,7 @@ function getFollowedUser(req, res) {
 //            pages: Math.ceil(total/itemsPerPage),
 //            follows: follows
 //        });
-        followUserIds(req.user.sub).then((value) => {
+        followUserIds(userId).then((value) => {
             return res.status(200).send({
 //                x1: "x1t1",
                 total: total,
@@ -104,7 +109,7 @@ function getFollowedUser(req, res) {
 //                follows: follows,
                 follows,
                 user_following: value.following,
-                user_follow_me: value.followed,
+                user_follow_me: value.followed
             });
         });
     });
