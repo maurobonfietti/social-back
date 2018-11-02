@@ -59,7 +59,7 @@ function getFollowingUsers(req, res) {
         
         followUserIds(req.user.sub).then((value) => {
             return res.status(200).send({
-                x1: "x1t1",
+//                x1: "x1t1",
                 total: total,
                 pages: Math.ceil(total/itemsPerPage),
 //                follows: follows,
@@ -91,10 +91,21 @@ function getFollowedUser(req, res) {
         if (err) return res.status(500).send({message: "Get follow error."});
         if (!follows) return res.status(404).send({message: "Without followers."});
 
-        return res.status(200).send({
-            total: total,
-            pages: Math.ceil(total/itemsPerPage),
-            follows: follows
+//        return res.status(200).send({
+//            total: total,
+//            pages: Math.ceil(total/itemsPerPage),
+//            follows: follows
+//        });
+        followUserIds(req.user.sub).then((value) => {
+            return res.status(200).send({
+//                x1: "x1t1",
+                total: total,
+                pages: Math.ceil(total/itemsPerPage),
+//                follows: follows,
+                follows,
+                user_following: value.following,
+                user_follow_me: value.followed,
+            });
         });
     });
 }
