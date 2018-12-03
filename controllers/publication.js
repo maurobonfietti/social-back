@@ -38,7 +38,7 @@ function getPublications(req, res) {
         page = req.params.page;
     }
 
-    var itemsPerPage = 4;
+    var itemsPerPage = 40;
     Follow.find({user: req.user.sub}).populate('followed').exec((err, follows) => {
         if (err) return res.status(500).send({message: "Get publications error."});
 

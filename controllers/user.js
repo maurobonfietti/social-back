@@ -133,7 +133,7 @@ function getUsers(req, res) {
         page = req.params.page;
     }
 
-    var itemsPerPage = 5;
+    var itemsPerPage = 20;
 
     User.find().sort('_id').paginate(page, itemsPerPage, (err, users, total) => {
         if (!users) return res.status(404).send({message: "Users Not Found."});
