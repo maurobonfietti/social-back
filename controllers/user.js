@@ -11,7 +11,7 @@ var path = require('path');
 
 function home (req, res) {
     res.status(200).send({
-        message: 'Welcome!'
+        message: 'Welcome Back! API Version 0.0.1 ;-)'
     });
 };
 
