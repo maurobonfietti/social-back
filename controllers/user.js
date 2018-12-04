@@ -15,13 +15,6 @@ function home (req, res) {
     });
 };
 
-function test (req, res) {
-    console.log(req.body);
-    res.status(200).send({
-        message: 'Testing...'
-    });
-};
-
 function saveUser (req, res) {
     var params = req.body;
     var user = new User();
@@ -244,7 +237,7 @@ function updateUser(req, res) {
         {email: update.email.toLowerCase()},
         {nick: update.nick.toLowerCase()}
     ]}).exec((err, users) => {
-        console.log(users);
+//        console.log(users);
         var user_isset = false;
         users.forEach((users) => {
             if (users._id != userId) user_isset = true;

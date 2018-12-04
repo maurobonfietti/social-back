@@ -124,7 +124,7 @@ function uploadImage(req, res) {
 
         if (file_ext === 'png' || file_ext === 'jpg' || file_ext === 'jpeg' || file_ext === 'gif') {
             Publication.findOne({'user': req.user.sub, '_id': publicationId}).exec((err, publication) => {
-                console.log(publication);
+//                console.log(publication);
                 if (publication) {
                     Publication.findByIdAndUpdate(publicationId, {file: file_name}, {new: true}, (err, publicationUpdated) => {
                         if (!publicationUpdated) return res.status(404).send({message: "Publication Not Found."});
