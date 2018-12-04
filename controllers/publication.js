@@ -9,10 +9,6 @@ var Publication = require('../models/publication');
 var User = require('../models/user');
 var Follow = require('../models/follow');
 
-function test(req, res) {
-    return res.status(200).send({message: "Publication Controller..."});
-}
-
 function savePublication(req, res) {
     var params = req.body;
 
@@ -164,7 +160,6 @@ function getImageFile(req, res) {
 }
 
 module.exports = {
-    test,
     savePublication,
     getPublications,
     getPublication,

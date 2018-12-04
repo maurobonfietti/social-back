@@ -7,11 +7,6 @@ var User = require('../models/user');
 var Follow = require('../models/follow');
 var Message = require('../models/message');
 
-
-function testMessage(req, res) {
-    return res.status(200).send({message: 'Testing message controller endpoint...'});
-}
-
 function saveMessage(req, res) {
     var params = req.body;
     if (!params.text || !params.receiver) {
@@ -102,7 +97,6 @@ function setViewedMessages(req, res) {
 }
 
 module.exports = {
-    testMessage,
     saveMessage,
     getReceivedMessages,
     getEmmitMessages,
