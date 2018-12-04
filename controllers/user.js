@@ -9,13 +9,14 @@ var jwt = require('../services/jwt');
 var fs = require('fs');
 var path = require('path');
 
-function home (req, res) {
+function home(req, res) {
     res.status(200).send({
         message: 'Welcome Back! API Version 0.0.1 ;-)'
     });
-};
+}
+;
 
-function saveUser (req, res) {
+function saveUser(req, res) {
     var params = req.body;
     var user = new User();
     if (params.name && params.surname && params.nick && params.email && params.password) {
@@ -25,20 +26,23 @@ function saveUser (req, res) {
         user.email = params.email;
         user.role = 'ROLE_USER';
         user.image = null;
-        User.find({ $or: [
-            {email: user.email.toLowerCase()},
-            {nick: user.nick.toLowerCase()}
-        ]}).exec((err, users) => {
-            if (err) return res.status(500).send({message: "Creating user error."}); 
+        User.find({$or: [
+                {email: user.email.toLowerCase()},
+                {nick: user.nick.toLowerCase()}
+            ]}).exec((err, users) => {
+            if (err)
+                return res.status(500).send({message: "Creating user error."});
             if (users && users.length >= 1) {
                 return res.status(200).send({message: "User already exists."});
             } else {
                 bcrypt.hash(params.password, null, null, (err, hash) => {
-                    if (err) return res.status(500).send({message: "Saving user error."});
+                    if (err)
+                        return res.status(500).send({message: "Saving user error."});
                     user.password = hash;
                 });
                 user.save((err, userStored) => {
-                    if (err) return res.status(500).send({message: "Saving user error."});
+                    if (err)
+                        return res.status(500).send({message: "Saving user error."});
                     if (userStored) {
                         return res.status(200).send({user: userStored});
                     } else {
@@ -50,14 +54,16 @@ function saveUser (req, res) {
     } else {
         return res.status(200).send({message: 'Invalid Data.'});
     }
-};
+}
+;
 
 function loginUser(req, res) {
     var params = req.body;
     var email = params.email;
     var password = params.password;
     User.findOne({email: email}, (err, user) => {
-        if (err) return res.status(500).send({message: "Login error."});
+        if (err)
+            return res.status(500).send({message: "Login error."});
         if (user) {
             bcrypt.compare(password, user.password, (err, check) => {
                 if (check) {
@@ -83,8 +89,10 @@ function getUser(req, res) {
     var userId = req.params.id;
 
     User.findById(userId, (err, user) => {
-        if (!user) return res.status(404).send({message: "User Not Found."});
-        if (err) return res.status(500).send({message: "Request Error."});
+        if (!user)
+            return res.status(404).send({message: "User Not Found."});
+        if (err)
+            return res.status(500).send({message: "Request Error."});
 
         followThisUser(req.user.sub, userId).then((value) => {
             return res.status(200).send({
@@ -97,20 +105,20 @@ function getUser(req, res) {
 }
 
 async function followThisUser(identity_user_id, user_id) {
-    var following = await Follow.findOne({ user: identity_user_id, followed: user_id }).exec()
-        .then((following) => {
-            return following;
-        })
-        .catch((err) => {
-            return handleError(err);
-        });
-    var followed = await Follow.findOne({ user: user_id, followed: identity_user_id }).exec()
-        .then((followed) => {
-            return followed;
-        })
-        .catch((err) => {
-            return handleError(err);
-        });
+    var following = await Follow.findOne({user: identity_user_id, followed: user_id}).exec()
+            .then((following) => {
+                return following;
+            })
+            .catch((err) => {
+                return handleError(err);
+            });
+    var followed = await Follow.findOne({user: user_id, followed: identity_user_id}).exec()
+            .then((followed) => {
+                return followed;
+            })
+            .catch((err) => {
+                return handleError(err);
+            });
 
     return {
         following: following,
@@ -129,8 +137,10 @@ function getUsers(req, res) {
     var itemsPerPage = 20;
 
     User.find().sort('_id').paginate(page, itemsPerPage, (err, users, total) => {
-        if (!users) return res.status(404).send({message: "Users Not Found."});
-        if (err) return res.status(500).send({message: "Request Error."});
+        if (!users)
+            return res.status(404).send({message: "Users Not Found."});
+        if (err)
+            return res.status(500).send({message: "Request Error."});
 
         followUserIds(identity_user_id).then((value) => {
             return res.status(200).send({
@@ -138,7 +148,7 @@ function getUsers(req, res) {
                 user_following: value.following,
                 user_follow_me: value.followed,
                 total,
-                pages: Math.ceil(total/itemsPerPage)
+                pages: Math.ceil(total / itemsPerPage)
             });
         });
     });
@@ -146,20 +156,20 @@ function getUsers(req, res) {
 
 async function followUserIds(user_id) {
     var following = await Follow.find({"user": user_id}).select({'_id': 0, '__v': 0, 'user': 0}).exec()
-        .then((following) => {
-            return following;
-        })
-        .catch((err) => {
-            return handleError(err);
-        });
+            .then((following) => {
+                return following;
+            })
+            .catch((err) => {
+                return handleError(err);
+            });
 
     var followed = await Follow.find({"followed": user_id}).select({'_id': 0, '__v': 0, 'followed': 0}).exec()
-        .then((followed) => {
-            return followed;
-        })
-        .catch((err) => {
-            return handleError(err);
-        });
+            .then((followed) => {
+                return followed;
+            })
+            .catch((err) => {
+                return handleError(err);
+            });
 
     var following_clean = [];
 
@@ -193,28 +203,28 @@ function getCounters(req, res) {
 
 async function getCountFollow(user_id) {
     var following = await Follow.count({"user": user_id}).exec()
-        .then((count) => {
-            return count;
-        })
-        .catch((err) => {
-            return handleError(err);
-        });
+            .then((count) => {
+                return count;
+            })
+            .catch((err) => {
+                return handleError(err);
+            });
 
     var followed = await Follow.count({"followed": user_id}).exec()
-        .then((count) => {
-            return count;
-        })
-        .catch((err) => {
-            return handleError(err);
-        });
+            .then((count) => {
+                return count;
+            })
+            .catch((err) => {
+                return handleError(err);
+            });
 
     var publications = await Publication.count({"user": user_id}).exec()
-        .then((count) => {
-            return count;
-        })
-        .catch((err) => {
-            return handleError(err);
-        });
+            .then((count) => {
+                return count;
+            })
+            .catch((err) => {
+                return handleError(err);
+            });
 
     return {
         following: following,
@@ -233,21 +243,25 @@ function updateUser(req, res) {
         return res.status(500).send({message: "You do not have permissions to modify the user."});
     }
 
-    User.find({ $or: [
-        {email: update.email.toLowerCase()},
-        {nick: update.nick.toLowerCase()}
-    ]}).exec((err, users) => {
+    User.find({$or: [
+            {email: update.email.toLowerCase()},
+            {nick: update.nick.toLowerCase()}
+        ]}).exec((err, users) => {
 //        console.log(users);
         var user_isset = false;
         users.forEach((users) => {
-            if (users._id != userId) user_isset = true;
+            if (users._id != userId)
+                user_isset = true;
         });
 
-        if (user_isset) return res.status(400).send({message: "The email and/or the nick already exists..."});
+        if (user_isset)
+            return res.status(400).send({message: "The email and/or the nick already exists..."});
 
-        User.findByIdAndUpdate(userId, update, {new: true}, (err, userUpdated) => {
-            if (!userUpdated) return res.status(404).send({message: "User Not Found."});
-            if (err) return res.status(500).send({message: "Request Error."});
+        User.findByIdAndUpdate(userId, update, {new : true}, (err, userUpdated) => {
+            if (!userUpdated)
+                return res.status(404).send({message: "User Not Found."});
+            if (err)
+                return res.status(500).send({message: "Request Error."});
 
             return res.status(200).send({user: userUpdated});
         });
@@ -269,9 +283,11 @@ function uploadImage(req, res) {
         }
 
         if (file_ext === 'png' || file_ext === 'jpg' || file_ext === 'jpeg' || file_ext === 'gif') {
-            User.findByIdAndUpdate(userId, {image: file_name}, {new: true}, (err, userUpdated) => {
-                if (!userUpdated) return res.status(404).send({message: "User Not Found."});
-                if (err) return res.status(500).send({message: "Request Error."});
+            User.findByIdAndUpdate(userId, {image: file_name}, {new : true}, (err, userUpdated) => {
+                if (!userUpdated)
+                    return res.status(404).send({message: "User Not Found."});
+                if (err)
+                    return res.status(500).send({message: "Request Error."});
 
                 return res.status(200).send({user: userUpdated});
             });

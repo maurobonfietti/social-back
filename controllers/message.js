@@ -21,8 +21,10 @@ function saveMessage(req, res) {
     message.viewed = 'false';
 
     message.save((err, messageStored) => {
-        if (err) return res.status(500).send({message: 'Sending message error...'});
-        if (!messageStored) return res.status(500).send({message: 'Error saving sended message...'});
+        if (err)
+            return res.status(500).send({message: 'Sending message error...'});
+        if (!messageStored)
+            return res.status(500).send({message: 'Error saving sended message...'});
 
         return res.status(200).send({message: messageStored});
     });
@@ -39,12 +41,14 @@ function getReceivedMessages(req, res) {
     var itemsPerPage = 4;
 
     Message.find({receiver: userId}).populate('emitter', 'name surname nick image _id').sort('-created_at').paginate(page, itemsPerPage, (err, messages, total) => {
-        if (err) return res.status(500).send({message: 'Get messages error...'});
-        if (!messages) return res.status(404).send({message: 'No messages...'});
+        if (err)
+            return res.status(500).send({message: 'Get messages error...'});
+        if (!messages)
+            return res.status(404).send({message: 'No messages...'});
 
         return res.status(200).send({
             total: total,
-            pages: Math.ceil(total/itemsPerPage),
+            pages: Math.ceil(total / itemsPerPage),
             messages
         });
     });
@@ -61,12 +65,14 @@ function getEmmitMessages(req, res) {
     var itemsPerPage = 4;
 
     Message.find({emitter: userId}).populate('emitter receiver', 'name surname nick image _id').sort('-created_at').paginate(page, itemsPerPage, (err, messages, total) => {
-        if (err) return res.status(500).send({message: 'Get messages error...'});
-        if (!messages) return res.status(404).send({message: 'No messages...'});
+        if (err)
+            return res.status(500).send({message: 'Get messages error...'});
+        if (!messages)
+            return res.status(404).send({message: 'No messages...'});
 
         return res.status(200).send({
             total: total,
-            pages: Math.ceil(total/itemsPerPage),
+            pages: Math.ceil(total / itemsPerPage),
             messages
         });
     });
@@ -76,7 +82,8 @@ function getUnviewedMessages(req, res) {
     var userId = req.user.sub;
 
     Message.count({receiver: userId, viewed: false}).exec((err, count) => {
-        if (err) return res.status(500).send({message: 'Get messages error...'});
+        if (err)
+            return res.status(500).send({message: 'Get messages error...'});
 
         return res.status(200).send({
             'unviewed': count
@@ -88,7 +95,8 @@ function setViewedMessages(req, res) {
     var userId = req.user.sub;
 
     Message.update({receiver: userId, viewed: 'false'}, {viewed: 'true'}, {"multi": true}, (err, messagesUpdated) => {
-        if (err) return res.status(500).send({message: 'Set messages error...'});
+        if (err)
+            return res.status(500).send({message: 'Set messages error...'});
 
         return res.status(200).send({
             messages: messagesUpdated

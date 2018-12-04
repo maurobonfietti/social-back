@@ -13,8 +13,10 @@ function saveFollow(req, res) {
     follow.followed = params.followed;
 
     follow.save((err, followStored) => {
-        if (err) return res.status(500).send({message: "Saving follow error."});
-        if (!followStored) return res.status(404).send({message: "User follow not saved."});
+        if (err)
+            return res.status(500).send({message: "Saving follow error."});
+        if (!followStored)
+            return res.status(404).send({message: "User follow not saved."});
 
         return res.status(200).send({follow: followStored});
     });
@@ -25,7 +27,8 @@ function deleteFollow(req, res) {
     var followId = req.params.id;
 
     Follow.find({'user': userId, 'followed': followId}).remove(err => {
-        if (err) return res.status(500).send({message: "Deleting follow error."});
+        if (err)
+            return res.status(500).send({message: "Deleting follow error."});
 
         return res.status(200).send({message: 'Follow deleted.'});
     });
@@ -51,8 +54,10 @@ function getFollowingUsers(req, res) {
 //    console.log(page);
 
     Follow.find({user: userId}).populate({path: 'followed'}).paginate(page, itemsPerPage, (err, follows, total) => {
-        if (err) return res.status(500).send({message: "Get follow error."});
-        if (!follows) return res.status(404).send({message: "Without follows."});
+        if (err)
+            return res.status(500).send({message: "Get follow error."});
+        if (!follows)
+            return res.status(404).send({message: "Without follows."});
 
 //        return res.status(200).send({
 //            total: total,
@@ -60,13 +65,13 @@ function getFollowingUsers(req, res) {
 //            follows: follows
 //        });
 //        console.log(follows);
-        
+
         followUserIds(userId).then((value) => {
 //            console.log(value);
             return res.status(200).send({
                 x1: "x1t1",
                 total: total,
-                pages: Math.ceil(total/itemsPerPage),
+                pages: Math.ceil(total / itemsPerPage),
 //                follows: follows,
                 follows,
                 user_following: value.following,
@@ -93,8 +98,10 @@ function getFollowedUser(req, res) {
     var itemsPerPage = 4;
 
     Follow.find({followed: userId}).populate('user').paginate(page, itemsPerPage, (err, follows, total) => {
-        if (err) return res.status(500).send({message: "Get follow error."});
-        if (!follows) return res.status(404).send({message: "Without followers."});
+        if (err)
+            return res.status(500).send({message: "Get follow error."});
+        if (!follows)
+            return res.status(404).send({message: "Without followers."});
 
 //        return res.status(200).send({
 //            total: total,
@@ -105,7 +112,7 @@ function getFollowedUser(req, res) {
             return res.status(200).send({
 //                x1: "x1t1",
                 total: total,
-                pages: Math.ceil(total/itemsPerPage),
+                pages: Math.ceil(total / itemsPerPage),
 //                follows: follows,
                 follows,
                 user_following: value.following,
@@ -123,8 +130,10 @@ function getMyFollows(req, res) {
     }
 
     find.populate('user followed').exec((err, follows) => {
-        if (err) return res.status(500).send({message: "Get follow error."});
-        if (!follows) return res.status(404).send({message: "Without follows."});
+        if (err)
+            return res.status(500).send({message: "Get follow error."});
+        if (!follows)
+            return res.status(404).send({message: "Without follows."});
 
         return res.status(200).send({follows});
     });
@@ -132,20 +141,20 @@ function getMyFollows(req, res) {
 
 async function followUserIds(user_id) {
     var following = await Follow.find({"user": user_id}).select({'_id': 0, '__v': 0, 'user': 0}).exec()
-        .then((following) => {
-            return following;
-        })
-        .catch((err) => {
-            return handleError(err);
-        });
+            .then((following) => {
+                return following;
+            })
+            .catch((err) => {
+                return handleError(err);
+            });
 
     var followed = await Follow.find({"followed": user_id}).select({'_id': 0, '__v': 0, 'followed': 0}).exec()
-        .then((followed) => {
-            return followed;
-        })
-        .catch((err) => {
-            return handleError(err);
-        });
+            .then((followed) => {
+                return followed;
+            })
+            .catch((err) => {
+                return handleError(err);
+            });
 
     var following_clean = [];
 

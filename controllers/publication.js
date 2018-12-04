@@ -12,7 +12,8 @@ var Follow = require('../models/follow');
 function savePublication(req, res) {
     var params = req.body;
 
-    if (!params.text) return res.status(200).send({message: "Text field is required."});
+    if (!params.text)
+        return res.status(200).send({message: "Text field is required."});
 
     var publication = new Publication();
     publication.text = params.text;
@@ -21,8 +22,10 @@ function savePublication(req, res) {
     publication.created_at = moment().unix();
 
     publication.save((err, publicationStored) => {
-        if (err) return res.status(500).send({message: "Saving publication error."});
-        if (!publicationStored) return res.status(404).send({message: "Publication not saved."});
+        if (err)
+            return res.status(500).send({message: "Saving publication error."});
+        if (!publicationStored)
+            return res.status(404).send({message: "Publication not saved."});
 
         return res.status(200).send({publication: publicationStored});
     });
@@ -36,7 +39,8 @@ function getPublications(req, res) {
 
     var itemsPerPage = 40;
     Follow.find({user: req.user.sub}).populate('followed').exec((err, follows) => {
-        if (err) return res.status(500).send({message: "Get publications error."});
+        if (err)
+            return res.status(500).send({message: "Get publications error."});
 
         var follows_clean = [];
 
@@ -46,12 +50,14 @@ function getPublications(req, res) {
         follows_clean.push(req.user.sub);
 
         Publication.find({user: {"$in": follows_clean}}).sort('-created_at').populate('user').paginate(page, itemsPerPage, (err, publications, total) => {
-            if (err) return res.status(500).send({message: "Get publications error..."});
-            if (!publications) return res.status(404).send({message: "Publications not found."});
+            if (err)
+                return res.status(500).send({message: "Get publications error..."});
+            if (!publications)
+                return res.status(404).send({message: "Publications not found."});
 
             return res.status(200).send({
                 total_items: total,
-                pages: Math.ceil(total/itemsPerPage),
+                pages: Math.ceil(total / itemsPerPage),
                 page: page,
                 item_per_page: itemsPerPage,
                 publications
@@ -74,12 +80,14 @@ function getPublicationsUser(req, res) {
     var itemsPerPage = 4;
 
     Publication.find({user: user}).sort('-created_at').populate('user').paginate(page, itemsPerPage, (err, publications, total) => {
-        if (err) return res.status(500).send({message: "Get publications error..."});
-        if (!publications) return res.status(404).send({message: "Publications not found."});
+        if (err)
+            return res.status(500).send({message: "Get publications error..."});
+        if (!publications)
+            return res.status(404).send({message: "Publications not found."});
 
         return res.status(200).send({
             total_items: total,
-            pages: Math.ceil(total/itemsPerPage),
+            pages: Math.ceil(total / itemsPerPage),
             page: page,
             item_per_page: itemsPerPage,
             publications
@@ -91,8 +99,10 @@ function getPublication(req, res) {
     var publicationId = req.params.id;
 
     Publication.findById(publicationId, (err, publication) => {
-        if (err) return res.status(500).send({message: "Get publication error..."});
-        if (!publication) return res.status(404).send({message: "Publication not found."});
+        if (err)
+            return res.status(500).send({message: "Get publication error..."});
+        if (!publication)
+            return res.status(404).send({message: "Publication not found."});
 
         return res.status(200).send({publication});
     });
@@ -102,7 +112,8 @@ function deletePublication(req, res) {
     var publicationId = req.params.id;
 
     Publication.find({'user': req.user.sub, '_id': publicationId}).remove((err) => {
-        if (err) return res.status(500).send({message: "Delete publication error..."});
+        if (err)
+            return res.status(500).send({message: "Delete publication error..."});
 
         return res.status(200).send({message: 'Publication deleted.'});
     });
@@ -122,9 +133,11 @@ function uploadImage(req, res) {
             Publication.findOne({'user': req.user.sub, '_id': publicationId}).exec((err, publication) => {
 //                console.log(publication);
                 if (publication) {
-                    Publication.findByIdAndUpdate(publicationId, {file: file_name}, {new: true}, (err, publicationUpdated) => {
-                        if (!publicationUpdated) return res.status(404).send({message: "Publication Not Found."});
-                        if (err) return res.status(500).send({message: "Request Error."});
+                    Publication.findByIdAndUpdate(publicationId, {file: file_name}, {new : true}, (err, publicationUpdated) => {
+                        if (!publicationUpdated)
+                            return res.status(404).send({message: "Publication Not Found."});
+                        if (err)
+                            return res.status(500).send({message: "Request Error."});
 
                         return res.status(200).send({publication: publicationUpdated});
                     });
