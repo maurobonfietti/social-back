@@ -37,7 +37,7 @@ function getPublications(req, res) {
         page = req.params.page;
     }
 
-    var itemsPerPage = 40;
+    var itemsPerPage = 3;
     Follow.find({user: req.user.sub}).populate('followed').exec((err, follows) => {
         if (err)
             return res.status(500).send({message: "Get publications error."});
@@ -77,7 +77,7 @@ function getPublicationsUser(req, res) {
         user = req.params.user;
     }
 
-    var itemsPerPage = 4;
+    var itemsPerPage = 3;
 
     Publication.find({user: user}).sort('-created_at').populate('user').paginate(page, itemsPerPage, (err, publications, total) => {
         if (err)

@@ -38,7 +38,7 @@ function getReceivedMessages(req, res) {
         page = req.params.page;
     }
 
-    var itemsPerPage = 10;
+    var itemsPerPage = 3;
 
     Message.find({receiver: userId}).populate('emitter', 'name surname nick image _id').sort('-created_at').paginate(page, itemsPerPage, (err, messages, total) => {
         if (err)
@@ -62,7 +62,7 @@ function getEmmitMessages(req, res) {
         page = req.params.page;
     }
 
-    var itemsPerPage = 4;
+    var itemsPerPage = 3;
 
     Message.find({emitter: userId}).populate('emitter receiver', 'name surname nick image _id').sort('-created_at').paginate(page, itemsPerPage, (err, messages, total) => {
         if (err)
