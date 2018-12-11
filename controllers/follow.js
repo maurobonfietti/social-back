@@ -49,9 +49,6 @@ function getFollowingUsers(req, res) {
     }
 
     var itemsPerPage = 3;
-//    console.log(itemsPerPage);
-//    console.log(userId);
-//    console.log(page);
 
     Follow.find({user: userId}).populate({path: 'followed'}).paginate(page, itemsPerPage, (err, follows, total) => {
         if (err)
@@ -59,20 +56,10 @@ function getFollowingUsers(req, res) {
         if (!follows)
             return res.status(404).send({message: "Without follows."});
 
-//        return res.status(200).send({
-//            total: total,
-//            pages: Math.ceil(total/itemsPerPage),
-//            follows: follows
-//        });
-//        console.log(follows);
-
         followUserIds(userId).then((value) => {
-//            console.log(value);
             return res.status(200).send({
-                x1: "x1t1",
                 total: total,
                 pages: Math.ceil(total / itemsPerPage),
-//                follows: follows,
                 follows,
                 user_following: value.following,
                 user_follow_me: value.followed
@@ -103,17 +90,10 @@ function getFollowedUser(req, res) {
         if (!follows)
             return res.status(404).send({message: "Without followers."});
 
-//        return res.status(200).send({
-//            total: total,
-//            pages: Math.ceil(total/itemsPerPage),
-//            follows: follows
-//        });
         followUserIds(userId).then((value) => {
             return res.status(200).send({
-//                x1: "x1t1",
                 total: total,
                 pages: Math.ceil(total / itemsPerPage),
-//                follows: follows,
                 follows,
                 user_following: value.following,
                 user_follow_me: value.followed

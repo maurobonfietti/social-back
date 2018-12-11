@@ -14,7 +14,6 @@ function home(req, res) {
         message: 'Welcome Back! API Version 0.0.1 ;-)'
     });
 }
-;
 
 function saveUser(req, res) {
     var params = req.body;
@@ -55,7 +54,6 @@ function saveUser(req, res) {
         return res.status(200).send({message: 'Invalid Data.'});
     }
 }
-;
 
 function loginUser(req, res) {
     var params = req.body;
@@ -87,7 +85,6 @@ function loginUser(req, res) {
 
 function getUser(req, res) {
     var userId = req.params.id;
-
     User.findById(userId, (err, user) => {
         if (!user)
             return res.status(404).send({message: "User Not Found."});
@@ -112,6 +109,7 @@ async function followThisUser(identity_user_id, user_id) {
             .catch((err) => {
                 return handleError(err);
             });
+
     var followed = await Follow.findOne({user: user_id, followed: identity_user_id}).exec()
             .then((followed) => {
                 return followed;
@@ -128,14 +126,11 @@ async function followThisUser(identity_user_id, user_id) {
 
 function getUsers(req, res) {
     var identity_user_id = req.user.sub;
-
+    var itemsPerPage = 3;
     var page = 1;
     if (req.params.page) {
         page = req.params.page;
     }
-
-    var itemsPerPage = 3;
-
     User.find().sort('_id').paginate(page, itemsPerPage, (err, users, total) => {
         if (!users)
             return res.status(404).send({message: "Users Not Found."});
@@ -172,13 +167,10 @@ async function followUserIds(user_id) {
             });
 
     var following_clean = [];
-
     following.forEach((follow) => {
         following_clean.push(follow.followed);
     });
-
     var followed_clean = [];
-
     followed.forEach((follow) => {
         followed_clean.push(follow.user);
     });
@@ -191,11 +183,9 @@ async function followUserIds(user_id) {
 
 function getCounters(req, res) {
     var userId = req.user.sub;
-
     if (req.params.id) {
         userId = req.params.id;
     }
-
     getCountFollow(userId).then((value) => {
         return res.status(200).send(value);
     });
@@ -236,9 +226,7 @@ async function getCountFollow(user_id) {
 function updateUser(req, res) {
     var userId = req.params.id;
     var update = req.body;
-
     delete update.password;
-
     if (userId !== req.user.sub) {
         return res.status(500).send({message: "You do not have permissions to modify the user."});
     }
@@ -247,13 +235,11 @@ function updateUser(req, res) {
             {email: update.email.toLowerCase()},
             {nick: update.nick.toLowerCase()}
         ]}).exec((err, users) => {
-//        console.log(users);
         var user_isset = false;
         users.forEach((users) => {
             if (users._id != userId)
                 user_isset = true;
         });
-
         if (user_isset)
             return res.status(400).send({message: "The email and/or the nick already exists..."});
 
@@ -270,18 +256,15 @@ function updateUser(req, res) {
 
 function uploadImage(req, res) {
     var userId = req.params.id;
-
     if (req.files) {
         var file_path = req.files.image.path;
         var file_split = file_path.split('/');
         var file_name = file_split[2];
         var ext_split = file_name.split('\.');
         var file_ext = ext_split[1];
-
         if (userId !== req.user.sub) {
             return removeFilesOfUploads(res, file_path, "You do not have permissions to modify the user.");
         }
-
         if (file_ext === 'png' || file_ext === 'jpg' || file_ext === 'jpeg' || file_ext === 'gif') {
             User.findByIdAndUpdate(userId, {image: file_name}, {new : true}, (err, userUpdated) => {
                 if (!userUpdated)
@@ -307,10 +290,7 @@ function removeFilesOfUploads(res, file_path, message) {
 
 function getImageFile(req, res) {
     var image_file = req.params.imageFile;
-//    console.log(image_file);
     var path_file = './uploads/users/' + image_file;
-//    console.log(path_file);
-
     fs.exists(path_file, (exists) => {
         if (exists) {
             res.sendFile(path.resolve(path_file));
