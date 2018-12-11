@@ -14,7 +14,7 @@ exports.createtoken = function (user) {
         role: user.role,
         image: user.image,
         iat: moment().unix(),
-        expired: moment().add(30, 'days').unix()
+        expired: moment().add(3, 'days').unix()
     };
     return jwt.encode(payload, secret);
 };
