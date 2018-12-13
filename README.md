@@ -16,4 +16,4 @@ npm install
 npm start
 ```
 
-Open http://localhost:3000 and take a look around.
+Open http://localhost:3800/api/home and take a look around.
