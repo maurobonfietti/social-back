@@ -1,3 +1,7 @@
 # social-back
 
-Work In Progress. Coming soon ;-)
+This repository is a tiny social media of example.
+
+## Application: MEAN Stack
+
+* Frontend: Angular 6. Backend: NodeJS, ExpressJS and MongoDB.
