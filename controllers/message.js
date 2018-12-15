@@ -29,7 +29,7 @@ function saveMessage(req, res) {
 
 function getReceivedMessages(req, res) {
     var userId = req.user.sub;
-    var itemsPerPage = 30;
+    var itemsPerPage = 3;
     var page = 1;
     if (req.params.page) {
         page = req.params.page;
@@ -50,7 +50,7 @@ function getReceivedMessages(req, res) {
 
 function getEmmitMessages(req, res) {
     var userId = req.user.sub;
-    var itemsPerPage = 30;
+    var itemsPerPage = 3;
     var page = 1;
     if (req.params.page) {
         page = req.params.page;
@@ -93,7 +93,6 @@ function getConversation(req, res) {
 
 function getConversation2(req, res) {
     var userId = req.user.sub;
-//    var userId2 = req.params.user;
     var itemsPerPage = 30;
     var page = 1;
     if (req.params.page) {
