@@ -1,5 +1,9 @@
 'use strict';
 
+var fs = require('fs');
+var path = require('path');
+var mongoosePaginate = require('mongoose-pagination');
+var User = require('../models/user');
 var Follow = require('../models/follow');
 
 function saveFollow(req, res) {
