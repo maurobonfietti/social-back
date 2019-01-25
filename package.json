@@ -1,11 +1,11 @@
 {
   "name": "social-back",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Simple social media using MEAN Stack.",
   "engines": {
     "node": "10.x"
   },
+  "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "local": "nodemon index.js",

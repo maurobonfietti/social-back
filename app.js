@@ -21,7 +21,7 @@ app.use((req, res, next) => {
 
 app.get('/', function (req, res) {
     res.status(200).send({
-        message: 'Welcome! API Version 0.1.1'
+        message: 'Welcome Back! Social API version 1.0.0'
     });
 });
 app.use('/api', user_routes);
