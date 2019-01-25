@@ -3,8 +3,9 @@
 const mongoose = require('mongoose');
 const app = require('./app');
 const port = process.env.PORT || 3800;
+const mongoDb = process.env.MONGODB_URL || 'mongodb://localhost:27017/social';
 
-mongoose.connect('mongodb://social:social1@ds149059.mlab.com:49059/social', { useNewUrlParser: true })
+mongoose.connect(mongoDb, { useNewUrlParser: true })
 .then(() => {
     console.log('DB: Connect OK!');
     app.listen(port, () => {
