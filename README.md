@@ -7,13 +7,14 @@ This is an example of a simple social media, using MEAN Stack (MongoDB, Express.
 * Frontend: Angular 6. [Go to repository](https://github.com/maurobonfietti/social).
 * Backend: Node.js, Express.js and MongoDB.
 
-## Installation
+## Development server
 
 Clone repo, install dependencies and start a development server.
 
 ``` bash
 npm install
 npm start
+# npm run local
 ```
 
-Open http://localhost:3800/api/home and take a look around.
+Open http://localhost:3800/ and take a look around.
