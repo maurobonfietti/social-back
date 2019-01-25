@@ -2,7 +2,8 @@
 
 var mongoose = require('mongoose');
 var app = require('./app');
-var port = 3800;
+//var port = 3800;
+const port = process.env.PORT || 3800;
 
 //mongoose.connect('mongodb://nodejs_api:nodejs_api@ds253889.mlab.com:53889/nodejs_api', { useNewUrlParser: true })
 //        .then(() => {
