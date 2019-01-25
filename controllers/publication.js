@@ -3,9 +3,7 @@
 var fs = require('fs');
 var path = require('path');
 var moment = require('moment');
-var mongoosePaginate = require('mongoose-pagination');
 var Publication = require('../models/publication');
-var User = require('../models/user');
 var Follow = require('../models/follow');
 
 function savePublication(req, res) {
