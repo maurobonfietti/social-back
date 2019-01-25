@@ -3,8 +3,13 @@
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": "9.5.0",
+    "npm": "6.0.0"
+  },
   "scripts": {
-    "start": "nodemon index.js",
+    "start": "node index.js",
+    "local": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Mauro Bonfietti",

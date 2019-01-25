@@ -19,6 +19,11 @@ app.use((req, res, next) => {
     next();
 });
 
+app.get('/', function (req, res) {
+    res.status(200).send({
+        message: 'Welcome! API Version 0.1.0'
+    });
+});
 app.use('/api', user_routes);
 app.use('/api', follow_routes);
 app.use('/api', publication_routes);
