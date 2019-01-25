@@ -9,12 +9,6 @@ var jwt = require('../services/jwt');
 var fs = require('fs');
 var path = require('path');
 
-function home(req, res) {
-    res.status(200).send({
-        message: 'Welcome Back! API Version 0.0.1 ;-)'
-    });
-}
-
 function saveUser(req, res) {
     var params = req.body;
     var user = new User();
@@ -301,7 +295,6 @@ function getImageFile(req, res) {
 }
 
 module.exports = {
-    home,
     saveUser,
     loginUser,
     getUser,

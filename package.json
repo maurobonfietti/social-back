@@ -1,11 +1,10 @@
 {
   "name": "social-back",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "engines": {
-    "node": "9.5.0",
-    "npm": "6.0.0"
+    "node": "10.x"
   },
   "scripts": {
     "start": "node index.js",
