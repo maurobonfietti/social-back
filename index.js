@@ -4,13 +4,17 @@ var mongoose = require('mongoose');
 var app = require('./app');
 var port = 3800;
 
-mongoose.connect('mongodb://localhost:27017/social', { useNewUrlParser: true })
-        .then(() => {
-            console.log('DB: Connect OK!');
-            app.listen(port, () => {
-                console.log('Server running on => http://localhost:' + port);
-            });
-        })
-        .catch(err => console.log(err));
+//mongoose.connect('mongodb://nodejs_api:nodejs_api@ds253889.mlab.com:53889/nodejs_api', { useNewUrlParser: true })
+//        .then(() => {
+//            console.log('DB: Connect OK!');
+//            app.listen(port, () => {
+//                console.log('Server running on => http://localhost:' + port);
+//            });
+//        })
+//        .catch(err => console.log(err));
+//
+//console.log('Starting...');
 
-console.log('Starting...');
+app.listen(port, () => {
+    console.log('Server running on => http://localhost:' + port);
+});
