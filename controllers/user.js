@@ -120,7 +120,7 @@ async function followThisUser(identity_user_id, user_id) {
 
 function getUsers(req, res) {
     var identity_user_id = req.user.sub;
-    var itemsPerPage = 3;
+    var itemsPerPage = 10;
     var page = 1;
     if (req.params.page) {
         page = req.params.page;
